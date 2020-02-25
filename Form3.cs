@@ -70,7 +70,7 @@ namespace Matching_cs
 
         }
         void checkiflog(int id,int shif) {
-            String date = DateTime.Now.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.GetCultureInfo("en-US"));
+            String date = dateTimePicker1.Value.ToString("yyyy-MM-dd");
 
             String url = "https://dashboards.tk/api.php/emp_attend";
             HttpClient client = new HttpClient();
@@ -149,7 +149,7 @@ namespace Matching_cs
                             TimeSpan halftwo = TimeSpan.Parse(Shifthalf2.ElementAt(shift)); //12 o'clock
                             TimeSpan now = DateTime.Now.TimeOfDay;
                             String status = "";
-                            String dates = DateTime.Now.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.GetCultureInfo("en-US"));
+                            String dates = dateTimePicker1.Value.ToString("yyyy-MM-dd");
                             String datestime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.GetCultureInfo("en-US"));
 
                             if ((now < start) && (now > end))
@@ -493,7 +493,7 @@ namespace Matching_cs
                 Console.Write(result + "This is the result");
             }
         }
-       async void LivefingerAsync() {
+       void LivefingerAsync() {
             try
             {
                 Int32 iError;
@@ -530,9 +530,9 @@ namespace Matching_cs
                         iError = m_FPM.MatchTemplate(m_RegMin2, m_VrfMin, secu_level, ref matched2);
                         if (matched1 || matched2)
                         {
-                         //   label2.Text = names.ElementAt((int)empid.ElementAt(i) - 1);
+                            label2.Text = names.ElementAt((int)empid.ElementAt(i) - 1);
 
-                        //    StatusBar.Text = "Sccuessfull !";
+                            StatusBar.Text = "Sccuessfull !";
 
 
                             checkiflog((int)empid.ElementAt(i), (int)shiftts.ElementAt((int)empid.ElementAt(i) - 1));
@@ -558,8 +558,8 @@ namespace Matching_cs
                         {
 
                             if (j == fingerone.Count()) {
-                          //      label2.Text = "Couldnt Recognized ! not valid";
-                          //      StatusBar.Text = "unsccuessfull !";
+                                label2.Text = "Couldnt Recognized ! not valid";
+                                StatusBar.Text = "unsccuessfull !";
                                 Refresh();
                                 LivefingerAsync();
                             }
@@ -825,14 +825,7 @@ namespace Matching_cs
             }
             else
             {
-                try {
-                    var t = Task.Run(() => LivefingerAsync());
-                    t.Wait();
-                } catch (Exception ee) {
-                    MessageBox.Show(""+ee);
-                }
-            
-                
+                LivefingerAsync();
             }
         }
         void userinfo(String URL, String paramss)
