@@ -1,0 +1,1483 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NodaMoney</name>
+    </assembly>
+    <members>
+        <member name="T:NodaMoney.Currency">
+            <summary>A unit of exchange, a currency of <see cref="T:NodaMoney.Money" />.</summary>
+            <remarks>See http://en.wikipedia.org/wiki/Currency .</remarks>
+        </member>
+        <member name="F:NodaMoney.Currency.Registry">
+            <summary>A singleton instance of the currencies registry.</summary>
+        </member>
+        <member name="M:NodaMoney.Currency.#ctor(System.String,System.String,System.Double,System.String,System.String,System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime})">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Currency" /> struct.</summary>
+            <param name="code">The code.</param>
+            <param name="number">The number.</param>
+            <param name="decimalDigits">The decimal digits.</param>
+            <param name="englishName">Name of the english.</param>
+            <param name="symbol">The currency symbol.</param>
+            <param name="namespace">The namespace of the currency.</param>
+            <param name="validTo">The valid until the specified date.</param>
+            <param name="validFrom">The valid from the specified date.</param>
+            <exception cref="T:System.ArgumentNullException">code or number or englishName or symbol is null</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">DecimalDigits of code must be greater or equal to zero!</exception>
+        </member>
+        <member name="M:NodaMoney.Currency.Deconstruct(System.String@,System.String@,System.String@)">
+            <summary>Deconstructs the current instance into its components.</summary>
+            <param name="code">The code.</param>
+            <param name="number">The number.</param>
+            <param name="symbol">The currency symbol.</param>
+        </member>
+        <member name="P:NodaMoney.Currency.CurrentCurrency">
+            <summary>Gets the Currency that represents the country/region used by the current thread.</summary>
+            <value>The Currency that represents the country/region used by the current thread.</value>
+        </member>
+        <member name="P:NodaMoney.Currency.CurrencySign">
+            <summary>Gets the currency sign (¤), a character used to denote an unspecified currency.</summary>
+            <remarks>https://en.wikipedia.org/wiki/Currency_sign_(typography) </remarks>
+        </member>
+        <member name="P:NodaMoney.Currency.Symbol">
+            <summary>Gets the currency symbol.</summary>
+        </member>
+        <member name="P:NodaMoney.Currency.EnglishName">
+            <summary>Gets the english name of the currency.</summary>
+        </member>
+        <member name="P:NodaMoney.Currency.Code">
+            <summary>Gets the three-character ISO-4217 currency code.</summary>
+        </member>
+        <member name="P:NodaMoney.Currency.Number">
+            <summary>Gets the numeric ISO-4217 currency code.</summary>
+        </member>
+        <member name="P:NodaMoney.Currency.Namespace">
+            <summary>Gets the namespace of the currency.</summary>
+        </member>
+        <member name="P:NodaMoney.Currency.DecimalDigits">
+            <summary>Gets the number of digits after the decimal separator.</summary>
+            <remarks>
+            <para>
+            For example, the default number of fraction digits for the US Dollar and Euro is 2, while for the Japanese Yen it's 0.
+            In the case of pseudo-currencies, such as Gold or IMF Special Drawing Rights, -1 is returned.
+            </para>
+            <para>
+            The Malagasy ariary and the Mauritanian ouguiya are technically divided into five subunits (the iraimbilanja and
+            khoum respectively), rather than by a power of ten. The coins display "1/5" on their face and are referred to as
+            a "fifth" (Khoum/cinquième). These are not used in practice, but when written out, a single significant digit is
+            used. E.g. 1.2 UM.
+            </para>
+            <para>
+            To represent this in decimal we do the following steps: 5 is 10 to the power of log(5) = 0.69897... ~ 0.7
+            </para>
+            </remarks>
+        </member>
+        <member name="P:NodaMoney.Currency.ValidFrom">
+            <summary>Gets the date when the currency is valid from.</summary>
+            <value>The from date when the currency is valid.</value>
+        </member>
+        <member name="P:NodaMoney.Currency.ValidTo">
+            <summary>Gets the date when the currency is valid to.</summary>
+            <value>The to date when the currency is valid.</value>
+        </member>
+        <member name="P:NodaMoney.Currency.MajorUnit">
+            <summary>Gets the major currency unit.</summary>
+        </member>
+        <member name="P:NodaMoney.Currency.MinorUnit">
+            <summary>Gets the minor currency unit.</summary>
+        </member>
+        <member name="P:NodaMoney.Currency.IsObsolete">
+            <summary>Gets a value indicating whether currency is obsolete.</summary>
+            <value><c>true</c> if this instance is obsolete; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="M:NodaMoney.Currency.op_Equality(NodaMoney.Currency,NodaMoney.Currency)">
+            <summary>Implements the operator ==.</summary>
+            <param name="left">The left Currency.</param>
+            <param name="right">The right Currency.</param>
+            <returns>The result of the operator.</returns>
+        </member>
+        <member name="M:NodaMoney.Currency.op_Inequality(NodaMoney.Currency,NodaMoney.Currency)">
+            <summary>Implements the operator ==.</summary>
+            <param name="left">The left Currency.</param>
+            <param name="right">The right Currency.</param>
+            <returns>The result of the operator.</returns>
+        </member>
+        <member name="M:NodaMoney.Currency.FromCode(System.String)">
+            <summary>Create an instance of the <see cref="T:NodaMoney.Currency"/>, based on a ISO 4217 currency code.</summary>
+            <param name="code">A ISO 4217 currency code, like EUR or USD.</param>
+            <returns>An instance of the type <see cref="T:NodaMoney.Currency"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">The value of 'code' cannot be null.</exception>
+            <exception cref="T:System.ArgumentException">The 'code' is an unknown ISO 4217 currency code!</exception>
+        </member>
+        <member name="M:NodaMoney.Currency.FromCode(System.String,System.String)">
+            <summary>Create an instance of the <see cref="T:NodaMoney.Currency"/> of the given code and namespace.</summary>
+            <param name="code">A currency code, like EUR or USD.</param>
+            <param name="namespace">A namespace, like ISO-4217.</param>
+            <returns>An instance of the type <see cref="T:NodaMoney.Currency"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">The value of 'code' or 'namespace' cannot be null or empty.</exception>
+            <exception cref="T:System.ArgumentException">The 'code' in the given namespace is an unknown!</exception>
+        </member>
+        <member name="M:NodaMoney.Currency.FromRegion(System.Globalization.RegionInfo)">
+            <summary>Creates an instance of the <see cref="T:NodaMoney.Currency"/> used within the specified <see cref="T:System.Globalization.RegionInfo"/>.</summary>
+            <param name="region"><see cref="T:System.Globalization.RegionInfo"/> to get a <see cref="T:NodaMoney.Currency"/> for.</param>
+            <returns>The <see cref="T:NodaMoney.Currency"/> instance used within the specified <see cref="T:System.Globalization.RegionInfo"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">The value of 'region' cannot be null.</exception>
+            <exception cref="T:System.ArgumentException">The 'code' is an unknown ISO 4217 currency code!</exception>
+        </member>
+        <member name="M:NodaMoney.Currency.FromCulture(System.Globalization.CultureInfo)">
+            <summary>Creates an instance of the <see cref="T:NodaMoney.Currency"/> used within the specified <see cref="T:System.Globalization.CultureInfo"/>.</summary>
+            <param name="culture"><see cref="T:System.Globalization.CultureInfo"/> to get a <see cref="T:NodaMoney.Currency"/> for.</param>
+            <returns>The <see cref="T:NodaMoney.Currency"/> instance used within the specified <see cref="T:System.Globalization.CultureInfo"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">The value of 'culture' cannot be null.</exception>
+            <exception cref="T:System.ArgumentException">
+            Culture is a neutral culture, from which no region information can be extracted -or-
+            The 'code' is an unknown ISO 4217 currency code!
+            </exception>
+        </member>
+        <member name="M:NodaMoney.Currency.FromRegion(System.String)">
+            <summary>Creates an instance of the <see cref="T:NodaMoney.Currency"/> used within the specified name of the region or culture.</summary>
+            <param name="name">
+            <para>A string that contains a two-letter code defined in ISO 3166 for country/region.</para>
+            <para>-or-</para>
+            <para>A string that contains the culture name for a specific culture, custom culture, or Windows-only culture. If the
+            culture name is not in RFC 4646 format, your application should specify the entire culture name instead of just the
+            country/region. See also <seealso cref="M:System.Globalization.RegionInfo.#ctor(System.String)"/>.</para>
+            </param>
+            <returns>The <see cref="T:NodaMoney.Currency"/> instance used within the specified region.</returns>
+            <exception cref="T:System.ArgumentNullException">The value of 'name' cannot be null.</exception>
+        </member>
+        <member name="M:NodaMoney.Currency.GetAllCurrencies">
+            <summary>Get all currencies.</summary>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of all registered currencies.</returns>
+        </member>
+        <member name="M:NodaMoney.Currency.Equals(NodaMoney.Currency,NodaMoney.Currency)">
+            <summary>Returns a value indicating whether two specified instances of <see cref="T:NodaMoney.Currency"/> represent the same value.</summary>
+            <param name="left">The first <see cref="T:NodaMoney.Currency"/> object.</param>
+            <param name="right">The second <see cref="T:NodaMoney.Currency"/> object.</param>
+            <returns>true if left and right are equal to this instance; otherwise, false.</returns>
+        </member>
+        <member name="M:NodaMoney.Currency.Equals(System.Object)">
+            <summary>Returns a value indicating whether this instance and a specified <see cref="T:System.Object"/> represent the same type and value.</summary>
+            <param name="obj">An <see cref="T:System.Object"/>.</param>
+            <returns>true if value is equal to this instance; otherwise, false.</returns>
+        </member>
+        <member name="M:NodaMoney.Currency.Equals(NodaMoney.Currency)">
+            <summary>Returns a value indicating whether this instance and a specified <see cref="T:NodaMoney.Currency"/> object represent the same value.</summary>
+            <param name="other">A <see cref="T:NodaMoney.Currency"/> object.</param>
+            <returns>true if value is equal to this instance; otherwise, false.</returns>
+        </member>
+        <member name="M:NodaMoney.Currency.GetHashCode">
+            <summary>Returns the hash code for this instance.</summary>
+            <returns>A 32-bit signed integer hash code.</returns>
+        </member>
+        <member name="M:NodaMoney.Currency.GetSchema">
+            <summary>This method is reserved and should not be used. When implementing the IXmlSerializable interface, you should
+            return null (Nothing in Visual Basic) from this method, and instead, if specifying a custom schema is required, apply
+            the <see cref="T:System.Xml.Serialization.XmlSchemaProviderAttribute" /> to the class.</summary>
+            <returns>An <see cref="T:System.Xml.Schema.XmlSchema" /> that describes the XML representation of the object that is
+            produced by the <see cref="M:System.Xml.Serialization.IXmlSerializable.WriteXml(System.Xml.XmlWriter)" /> method and
+            consumed by the <see cref="M:System.Xml.Serialization.IXmlSerializable.ReadXml(System.Xml.XmlReader)" /> method.
+            </returns>
+        </member>
+        <member name="M:NodaMoney.Currency.ReadXml(System.Xml.XmlReader)">
+            <summary>Generates an object from its XML representation.</summary>
+            <param name="reader">The <see cref="T:System.Xml.XmlReader" /> stream from which the object is deserialized.</param>
+            <exception cref="T:System.ArgumentNullException">The value of 'reader' cannot be null. </exception>
+        </member>
+        <member name="M:NodaMoney.Currency.WriteXml(System.Xml.XmlWriter)">
+            <summary>
+            Converts an object into its XML representation.
+            </summary>
+            <param name="writer">The <see cref="T:System.Xml.XmlWriter" /> stream to which the object is serialized.</param>
+            <exception cref="T:System.ArgumentNullException">The value of 'writer' cannot be null.</exception>
+        </member>
+        <member name="T:NodaMoney.CurrencyBuilder">
+            <summary>Defines a custom currency that is new or based on another currency.</summary>
+        </member>
+        <member name="M:NodaMoney.CurrencyBuilder.#ctor(System.String,System.String)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.CurrencyBuilder"/> class.</summary>
+            <param name="code">The code of the currency, normally the three-character ISO 4217 currency code.</param>
+            <param name="namespace">The namespace for the currency.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="code"/> or <paramref name="namespace"/> is <see langword="null" /> or empty.</exception>
+        </member>
+        <member name="P:NodaMoney.CurrencyBuilder.EnglishName">
+            <summary>Gets or sets the english name of the currency.</summary>
+        </member>
+        <member name="P:NodaMoney.CurrencyBuilder.Symbol">
+            <summary>Gets or sets the currency sign.</summary>
+        </member>
+        <member name="P:NodaMoney.CurrencyBuilder.ISONumber">
+            <summary>Gets or sets the numeric ISO 4217 currency code.</summary>
+        </member>
+        <member name="P:NodaMoney.CurrencyBuilder.DecimalDigits">
+            <summary>Gets or sets the number of digits after the decimal separator.</summary>
+        </member>
+        <member name="P:NodaMoney.CurrencyBuilder.Namespace">
+            <summary>Gets the namespace of the currency.</summary>
+        </member>
+        <member name="P:NodaMoney.CurrencyBuilder.Code">
+            <summary>Gets the code of the currency, normally a three-character ISO 4217 currency code.</summary>
+        </member>
+        <member name="P:NodaMoney.CurrencyBuilder.ValidFrom">
+            <summary>Gets or sets the date when the currency is valid from.</summary>
+            <value>The from date when the currency is valid.</value>
+        </member>
+        <member name="P:NodaMoney.CurrencyBuilder.ValidTo">
+            <summary>Gets or sets the date when the currency is valid to.</summary>
+            <value>The to date when the currency is valid.</value>
+        </member>
+        <member name="M:NodaMoney.CurrencyBuilder.CreateFromLdml(System.String)">
+            <summary>Reconstitutes a <see cref="T:NodaMoney.CurrencyBuilder"/> object from a specified XML file that contains a
+            representation of the object.</summary>
+            <param name="xmlFileName">A file name that contains the XML representation of a <see cref="T:NodaMoney.CurrencyBuilder"/> object.</param>
+            <returns>A new object that is equivalent to the information stored in the <i>xmlFileName</i> parameter.</returns>
+        </member>
+        <member name="M:NodaMoney.CurrencyBuilder.Unregister(System.String,System.String)">
+            <summary>Unregisters the specified currency code from the current AppDomain and returns it.</summary>
+            <param name="code">The name of the currency to unregister.</param>
+            <param name="namespace">The namespace of the currency to unregister from.</param>
+            <returns>An instance of the type <see cref="T:NodaMoney.Currency"/>.</returns>
+            <exception cref="T:System.ArgumentException">code specifies a currency that is not found in the given namespace.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="code" /> or <paramref name="namespace" /> is <see langword="null" /> or empty.</exception>
+        </member>
+        <member name="M:NodaMoney.CurrencyBuilder.Build">
+            <summary>Builds the current <see cref="T:NodaMoney.CurrencyBuilder"/> object as a custom currency.</summary>
+            <returns>A <see cref="T:NodaMoney.Currency"/> instance that is build.</returns>
+        </member>
+        <member name="M:NodaMoney.CurrencyBuilder.Register">
+            <summary>Registers the current <see cref="T:NodaMoney.CurrencyBuilder"/> object as a custom currency for the current AppDomain.</summary>
+            <returns>A <see cref="T:NodaMoney.Currency"/> instance that is build and registered.</returns>
+            <exception cref="T:System.InvalidOperationException">
+                <para>The custom currency is already registered</para>
+                <para>-or-</para>
+                <para>The current CurrencyBuilder object has a property that must be set before the currency can be registered.</para>
+            </exception>
+        </member>
+        <member name="M:NodaMoney.CurrencyBuilder.Save(System.String)">
+            <summary>Writes an XML representation of the current <see cref="T:NodaMoney.CurrencyBuilder"/> object to the specified file.</summary>
+            <param name="fileName">The name of a file to contain the XML representation of this custom currency.</param>
+            <remarks>
+                <para>
+                The Save method writes the current <see cref="T:NodaMoney.CurrencyBuilder"/> object to the file specified by the
+                filename parameter in an XML format called Locale Data Markup Language (LDML) version 1.1.
+                The <see cref="M:NodaMoney.CurrencyBuilder.CreateFromLdml(System.String)"/> method performs the reverse operation of the Save method.
+                </para>
+                <para>
+                For information about the format of an LDML file, see the CreateFromLdml method. For information about the LDML
+                standard, see <see href='http://go.microsoft.com/fwlink/p/?LinkId=252840'>Unicode Technical Standard #35, "Locale
+                Data Markup Language (LDML)"</see> on the Unicode Consortium website.
+                </para>
+            </remarks>
+        </member>
+        <member name="M:NodaMoney.CurrencyBuilder.LoadDataFromCurrency(NodaMoney.Currency)">
+            <summary>Sets the properties of the current <see cref="T:NodaMoney.CurrencyBuilder"/> object with the corresponding properties of
+            the specified <see cref="T:NodaMoney.Currency"/> object, except for the code and namespace.</summary>
+            <param name="currency">The object whose properties will be used.</param>
+        </member>
+        <member name="T:NodaMoney.CurrencyRegistry">
+            <summary>Represent the central thread-safe registry for currencies.</summary>
+        </member>
+        <member name="F:NodaMoney.CurrencyRegistry.Z07">
+            <summary>
+            The Malagasy ariary and the Mauritanian ouguiya are technically divided into five subunits (the iraimbilanja and
+            khoum respectively), rather than by a power of ten. The coins display "1/5" on their face and are referred to as
+            a "fifth" (Khoum/cinquième). These are not used in practice, but when written out, a single significant digit is
+            used. E.g. 1.2 UM.
+            To represent this in decimal we do the following steps: 5 is 10 to the power of log(5) = 0.69897... ~ 0.7
+            </summary>
+        </member>
+        <member name="F:NodaMoney.CurrencyRegistry.NotApplicable">
+            <summary>Used for indication that the number of decimal digits doesn't matter, for example for gold or silver.</summary>
+        </member>
+        <member name="M:NodaMoney.CurrencyRegistry.TryGet(System.String,NodaMoney.Currency@)">
+            <summary>Tries the get <see cref="T:NodaMoney.Currency"/> of the given code and namespace.</summary>
+            <param name="code">A currency code, like EUR or USD.</param>
+            <param name="currency">When this method returns, contains the <see cref="T:NodaMoney.Currency"/> that has the specified code, or the default value of the type if the operation failed.</param>
+            <returns><b>true</b> if <see cref="T:NodaMoney.CurrencyRegistry"/> contains a <see cref="T:NodaMoney.Currency"/> with the specified code; otherwise, <b>false</b>.</returns>
+            <exception cref="T:System.ArgumentNullException">The value of 'code' cannot be null or empty.</exception>
+        </member>
+        <member name="M:NodaMoney.CurrencyRegistry.TryGet(System.String,System.String,NodaMoney.Currency@)">
+            <summary>Tries the get <see cref="T:NodaMoney.Currency"/> of the given code and namespace.</summary>
+            <param name="code">A currency code, like EUR or USD.</param>
+            <param name="namespace">A namespace, like ISO-4217.</param>
+            <param name="currency">When this method returns, contains the <see cref="T:NodaMoney.Currency"/> that has the specified code and namespace, or the default value of the type if the operation failed.</param>
+            <returns><b>true</b> if <see cref="T:NodaMoney.CurrencyRegistry"/> contains a <see cref="T:NodaMoney.Currency"/> with the specified code; otherwise, <b>false</b>.</returns>
+            <exception cref="T:System.ArgumentNullException">The value of 'code' or 'namespace' cannot be null or empty.</exception>
+        </member>
+        <member name="M:NodaMoney.CurrencyRegistry.TryAdd(System.String,System.String,NodaMoney.Currency)">
+            <summary>Attempts to add the <see cref="T:NodaMoney.Currency"/> of the given code and namespace.</summary>
+            <param name="code">A currency code, like EUR or USD.</param>
+            <param name="namespace">A namespace, like ISO-4217.</param>
+            <param name="currency">When this method returns, contains the <see cref="T:NodaMoney.Currency"/> that has the specified code and namespace, or the default value of the type if the operation failed.</param>
+            <returns><b>true</b> if the <see cref="T:NodaMoney.Currency"/> with the specified code is added; otherwise, <b>false</b>.</returns>
+            <exception cref="T:System.ArgumentNullException">The value of 'code' or 'namespace' cannot be null or empty.</exception>
+        </member>
+        <member name="M:NodaMoney.CurrencyRegistry.TryRemove(System.String,System.String,NodaMoney.Currency@)">
+            <summary>Attempts to remove the <see cref="T:NodaMoney.Currency"/> of the given code and namespace.</summary>
+            <param name="code">A currency code, like EUR or USD.</param>
+            <param name="namespace">A namespace, like ISO-4217.</param>
+            <param name="currency">When this method returns, contains the <see cref="T:NodaMoney.Currency"/> that has the specified code and namespace, or the default value of the type if the operation failed.</param>
+            <returns><b>true</b> if the <see cref="T:NodaMoney.Currency"/> with the specified code is removed; otherwise, <b>false</b>.</returns>
+            <exception cref="T:System.ArgumentNullException">The value of 'code' or 'namespace' cannot be null or empty.</exception>
+        </member>
+        <member name="M:NodaMoney.CurrencyRegistry.GetAllCurrencies">
+            <summary>Get all registered currencies.</summary>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of all registered currencies.</returns>
+        </member>
+        <member name="T:NodaMoney.ExchangeRate">
+            <summary>A conversion of money of one currency into money of another currency</summary>
+            <remarks>See http://en.wikipedia.org/wiki/Exchange_rate .</remarks>
+        </member>
+        <member name="M:NodaMoney.ExchangeRate.#ctor(NodaMoney.Currency,NodaMoney.Currency,System.Decimal)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.ExchangeRate"/> struct.</summary>
+            <param name="baseCurrency">The base currency.</param>
+            <param name="quoteCurrency">The quote currency.</param>
+            <param name="rate">The rate of the exchange.</param>
+            <exception cref="T:System.ArgumentNullException">The value of 'baseCurrency' or 'quoteCurrency' cannot be null. </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Rate must be greater than zero!</exception>
+            <exception cref="T:System.ArgumentException">The base and quote currency can't be equal!</exception>
+        </member>
+        <member name="M:NodaMoney.ExchangeRate.#ctor(NodaMoney.Currency,NodaMoney.Currency,System.Double,System.Int32)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.ExchangeRate"/> struct.</summary>
+            <param name="baseCurrency">The base currency.</param>
+            <param name="quoteCurrency">The quote currency.</param>
+            <param name="rate">The rate of the exchange.</param>
+            <param name="numberOfDecimals">The number of decimals to round the exchange rate to.</param>
+        </member>
+        <member name="M:NodaMoney.ExchangeRate.#ctor(System.String,System.String,System.Decimal)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.ExchangeRate"/> struct.</summary>
+            <param name="baseCode">The code of the base currency.</param>
+            <param name="quoteCode">The code of the quote currency.</param>
+            <param name="rate">The rate of the exchange.</param>
+        </member>
+        <member name="M:NodaMoney.ExchangeRate.#ctor(System.String,System.String,System.Double,System.Int32)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.ExchangeRate"/> struct.</summary>
+            <param name="baseCode">The code of the base currency.</param>
+            <param name="quoteCode">The code of the quote currency.</param>
+            <param name="rate">The rate of the exchange.</param>
+            <param name="numberOfDecimals">The number of decimals to round the exchange rate to.</param>
+        </member>
+        <member name="M:NodaMoney.ExchangeRate.Deconstruct(NodaMoney.Currency@,NodaMoney.Currency@,System.Decimal@)">
+            <summary>Deconstructs the current instance into its components.</summary>
+            <param name="baseCurrency">The base currency.</param>
+            <param name="quoteCurrency">The quote currency.</param>
+            <param name="rate">The rate of the exchange.</param>
+        </member>
+        <member name="P:NodaMoney.ExchangeRate.BaseCurrency">
+            <summary>Gets the base currency.</summary>
+            <value>The base currency.</value>
+        </member>
+        <member name="P:NodaMoney.ExchangeRate.QuoteCurrency">
+            <summary>Gets the quote currency.</summary>
+            <value>The quote currency.</value>
+        </member>
+        <member name="P:NodaMoney.ExchangeRate.Value">
+            <summary>Gets the value of the exchange rate.</summary>
+            <value>The value of the exchange rate.</value>
+        </member>
+        <member name="M:NodaMoney.ExchangeRate.op_Equality(NodaMoney.ExchangeRate,NodaMoney.ExchangeRate)">
+            <summary>Implements the operator ==.</summary>
+            <param name="left">The left ExchangeRate.</param>
+            <param name="right">The right ExchangeRate.</param>
+            <returns>The result of the operator.</returns>
+        </member>
+        <member name="M:NodaMoney.ExchangeRate.op_Inequality(NodaMoney.ExchangeRate,NodaMoney.ExchangeRate)">
+            <summary>Implements the operator !=.</summary>
+            <param name="left">The left ExchangeRate.</param>
+            <param name="right">The right ExchangeRate.</param>
+            <returns>The result of the operator.</returns>
+        </member>
+        <member name="M:NodaMoney.ExchangeRate.Parse(System.String)">
+            <summary>Converts the string representation of an exchange rate to its <see cref="T:NodaMoney.ExchangeRate"/> equivalent.</summary>
+            <param name="rate">The string representation of the exchange rate to convert.</param>
+            <returns>The equivalent to the exchange rate contained in rate.</returns>
+            <exception cref="T:System.FormatException">rate is not in the correct format!</exception>
+        </member>
+        <member name="M:NodaMoney.ExchangeRate.TryParse(System.String,NodaMoney.ExchangeRate@)">
+            <summary>Converts the string representation of an exchange rate to its <see cref="T:NodaMoney.ExchangeRate"/> equivalent. A return
+            value indicates whether the conversion succeeded or failed.</summary>
+            <param name="rate">The string representation of the exchange rate to convert.</param>
+            <param name="result">When this method returns, contains the <see cref="T:NodaMoney.ExchangeRate"/> that is equivalent to the exchange rate contained in
+            rate, if the conversion succeeded,
+            or is zero if the conversion failed. The conversion fails if the rate parameter is null, is not a exchange rate in a
+            valid format, or represents a number less than MinValue
+            or greater than MaxValue. This parameter is passed uninitialized.</param>
+            <returns><b>true</b> if rate was converted successfully; otherwise, <b>false</b>.</returns>
+        </member>
+        <member name="M:NodaMoney.ExchangeRate.Convert(NodaMoney.Money)">
+            <summary>Converts the specified money.</summary>
+            <param name="money">The money.</param>
+            <returns>The converted money.</returns>
+            <exception cref="T:System.ArgumentException">Money should have the same currency as the base currency or the quote
+            currency!</exception>
+        </member>
+        <member name="M:NodaMoney.ExchangeRate.GetHashCode">
+            <summary>Returns the hash code for this instance.</summary>
+            <returns>A 32-bit signed integer that is the hash code for this instance.</returns>
+        </member>
+        <member name="M:NodaMoney.ExchangeRate.Equals(NodaMoney.ExchangeRate)">
+            <summary>Indicates whether this instance and a specified <see cref="T:NodaMoney.ExchangeRate"/> are equal.</summary>
+            <param name="other">Another object to compare to.</param>
+            <returns>true if <paramref name="other"/> and this instance are the same type and represent the same value; otherwise,
+            false.</returns>
+        </member>
+        <member name="M:NodaMoney.ExchangeRate.Equals(System.Object)">
+            <summary>Indicates whether this instance and a specified object are equal.</summary>
+            <param name="obj">Another object to compare to.</param>
+            <returns>true if <paramref name="obj"/> and this instance are the same type and represent the same value; otherwise,
+            false.</returns>
+        </member>
+        <member name="M:NodaMoney.ExchangeRate.ToString">
+            <summary>Converts this <see cref="T:NodaMoney.ExchangeRate"/> instance to its equivalent <see cref="T:System.String"/> representation.</summary>
+            <returns>A string that represents this <see cref="T:NodaMoney.ExchangeRate"/> instance.</returns>
+            <remarks>See http://en.wikipedia.org/wiki/Currency_Pair for more info about how an ExchangeRate can be presented.</remarks>
+        </member>
+        <member name="T:NodaMoney.Extensions.MoneyExtensions">
+            <summary>Extensions for <see cref="T:NodaMoney.Money"/>.</summary>
+        </member>
+        <member name="M:NodaMoney.Extensions.MoneyExtensions.SafeDivide(NodaMoney.Money,System.Int32)">
+            <summary>Divide the Money in equal shares, without losing Money.</summary>
+            <param name="money">The <see cref="T:NodaMoney.Money"/> instance.</param>
+            <param name="shares">The number of shares to divide in.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of Money.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">shares;Number of shares must be greater than 1</exception>
+            <remarks>As rounding mode, MidpointRounding.ToEven is used (<seealso cref="T:System.MidpointRounding"/>).
+            The behavior of this method follows IEEE Standard 754, section 4. This kind of rounding is sometimes called
+            rounding to nearest, or banker's rounding. It minimizes rounding errors that result from consistently rounding a
+            midpoint value in a single direction.</remarks>
+        </member>
+        <member name="M:NodaMoney.Extensions.MoneyExtensions.SafeDivide(NodaMoney.Money,System.Int32,System.MidpointRounding)">
+            <summary>Divide the Money in equal shares, without losing Money.</summary>
+            <param name="money">The <see cref="T:NodaMoney.Money"/> instance.</param>
+            <param name="shares">The number of shares to divide in.</param>
+            <param name="rounding">The rounding mode.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of Money.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">shares;Number of shares must be greater than 1</exception>
+        </member>
+        <member name="M:NodaMoney.Extensions.MoneyExtensions.SafeDivide(NodaMoney.Money,System.Int32[])">
+            <summary>Divide the Money in shares with a specific ratio, without losing Money.</summary>
+            <param name="money">The <see cref="T:NodaMoney.Money"/> instance.</param>
+            <param name="ratios">The number of shares as an array of ratios.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of Money.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">ratios;Sum of ratios must be greater than 1</exception>
+            <remarks>As rounding mode, MidpointRounding.ToEven is used (<seealso cref="T:System.MidpointRounding"/>).
+            The behavior of this method follows IEEE Standard 754, section 4. This kind of rounding is sometimes called
+            rounding to nearest, or banker's rounding. It minimizes rounding errors that result from consistently rounding a
+            midpoint value in a single direction.</remarks>
+        </member>
+        <member name="M:NodaMoney.Extensions.MoneyExtensions.SafeDivide(NodaMoney.Money,System.Int32[],System.MidpointRounding)">
+            <summary>Divide the Money in shares with a specific ratio, without losing Money.</summary>
+            <param name="money">The <see cref="T:NodaMoney.Money"/> instance.</param>
+            <param name="ratios">The number of shares as an array of ratios.</param>
+            <param name="rounding">The rounding mode.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of Money.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">shares;Number of shares must be greater than 1</exception>
+        </member>
+        <member name="T:NodaMoney.InvalidCurrencyException">
+            <summary>The exception that is thrown when the <see cref="T:NodaMoney.Currency"/> is invalid for the current context or object state.</summary>
+        </member>
+        <member name="M:NodaMoney.InvalidCurrencyException.#ctor">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.InvalidCurrencyException"/> class.</summary>
+        </member>
+        <member name="M:NodaMoney.InvalidCurrencyException.#ctor(System.String)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.InvalidCurrencyException"/> class.</summary>
+            <param name="message">The message that describes the error.</param>
+        </member>
+        <member name="M:NodaMoney.InvalidCurrencyException.#ctor(System.String,System.Exception)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.InvalidCurrencyException"/> class.</summary>
+            <param name="message">The error message that explains the reason for the exception.</param>
+            <param name="innerException">The exception that is the cause of the current exception. If the <paramref name="innerException"/>
+            parameter is not a null reference (Nothing in Visual Basic), the current exception is raised in a catch block that
+            handles the inner exception.</param>
+        </member>
+        <member name="M:NodaMoney.InvalidCurrencyException.#ctor(NodaMoney.Currency,NodaMoney.Currency)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.InvalidCurrencyException"/> class.</summary>
+            <param name="expected">The expected currency.</param>
+            <param name="actual">The actual currency.</param>
+        </member>
+        <member name="T:NodaMoney.Money">
+            <summary>Represents Money, an amount defined in a specific Currency.</summary>
+            <summary>Represents Money, an amount defined in a specific Currency.</summary>
+            <summary>Represents Money, an amount defined in a specific Currency.</summary>
+            <summary>Represents Money, an amount defined in a specific Currency.</summary>
+            <remarks>
+            The <see cref="T:NodaMoney.Money"/> structure allows development of applications that handle
+            various types of Currency. Money will hold the <see cref="P:NodaMoney.Money.Currency"/> and Amount of money,
+            and ensure that two different currencies cannot be added or subtracted to each other.
+            </remarks>
+            <summary>Represents Money, an amount defined in a specific Currency.</summary>
+            <summary>Represents Money, an amount defined in a specific Currency.</summary>
+            <summary>Represents Money, an amount defined in a specific Currency.</summary>
+            <summary>Represents Money, an amount defined in a specific Currency.</summary>
+            <summary>Represents Money, an amount defined in a specific Currency.</summary>
+        </member>
+        <member name="M:NodaMoney.Money.op_Addition(NodaMoney.Money,NodaMoney.Money)">
+            <summary>Adds two specified <see cref="T:NodaMoney.Money"/> values.</summary>
+            <param name="left">A <see cref="T:NodaMoney.Money"/> object on the left side.</param>
+            <param name="right">A <see cref="T:NodaMoney.Money"/> object on the right side.</param>
+            <returns>The <see cref="T:NodaMoney.Money"/> result of adding left and right.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.op_Addition(NodaMoney.Money,System.Decimal)">
+            <summary>Add the <see cref="T:NodaMoney.Money"/> value with the given value.</summary>
+            <param name="left">A <see cref="T:NodaMoney.Money"/> object on the left side.</param>
+            <param name="right">A <see cref="T:System.Decimal"/> object on the right side.</param>
+            <returns>The <see cref="T:NodaMoney.Money"/> result of adding left and right.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.op_Addition(System.Decimal,NodaMoney.Money)">
+            <summary>Add the <see cref="T:NodaMoney.Money"/> value with the given value.</summary>
+            <param name="left">A <see cref="T:System.Decimal"/> object on the left side.</param>
+            <param name="right">A <see cref="T:NodaMoney.Money"/> object on the right side.</param>
+            <returns>The <see cref="T:NodaMoney.Money"/> result of adding left and right.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.op_Subtraction(NodaMoney.Money,NodaMoney.Money)">
+            <summary>Subtracts two specified <see cref="T:NodaMoney.Money"/> values.</summary>
+            <param name="left">A <see cref="T:NodaMoney.Money"/> object on the left side.</param>
+            <param name="right">A <see cref="T:NodaMoney.Money"/> object on the right side.</param>
+            <returns>The <see cref="T:NodaMoney.Money"/> result of subtracting right from left.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.op_Subtraction(NodaMoney.Money,System.Decimal)">
+            <summary>Subtracts <see cref="T:NodaMoney.Money"/> value with the given value.</summary>
+            <param name="left">A <see cref="T:NodaMoney.Money"/> object on the left side.</param>
+            <param name="right">A <see cref="T:System.Decimal"/> object on the right side.</param>
+            <returns>The <see cref="T:NodaMoney.Money"/> result of subtracting right from left.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.op_Subtraction(System.Decimal,NodaMoney.Money)">
+            <summary>Subtracts <see cref="T:NodaMoney.Money"/> value with the given value.</summary>
+            <param name="left">A <see cref="T:System.Decimal"/> object on the left side.</param>
+            <param name="right">A <see cref="T:NodaMoney.Money"/> object on the right side.</param>
+            <returns>The <see cref="T:NodaMoney.Money"/> result of subtracting right from left.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.op_Multiply(NodaMoney.Money,System.Decimal)">
+            <summary>Multiplies the <see cref="T:NodaMoney.Money"/> value by the given value.</summary>
+            <param name="left">A <see cref="T:NodaMoney.Money"/> object on the left side.</param>
+            <param name="right">A <see cref="T:System.Decimal"/> object on the right side.</param>
+            <returns>The <see cref="T:NodaMoney.Money"/> result of multiplying right with left.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.op_Multiply(System.Decimal,NodaMoney.Money)">
+            <summary>Multiplies the <see cref="T:NodaMoney.Money"/> value by the given value.</summary>
+            <param name="left">A <see cref="T:System.Decimal"/> object on the left side.</param>
+            <param name="right">A <see cref="T:NodaMoney.Money"/> object on the right side.</param>
+            <returns>The <see cref="T:NodaMoney.Money"/> result of multiplying left with right.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.op_Division(NodaMoney.Money,System.Decimal)">
+            <summary>Divides the <see cref="T:NodaMoney.Money"/> value by the given value.</summary>
+            <param name="left">A <see cref="T:NodaMoney.Money"/> object on the left side.</param>
+            <param name="right">A <see cref="T:System.Decimal"/> object on the right side.</param>
+            <returns>The <see cref="T:NodaMoney.Money"/> result of dividing left with right.</returns>
+            <remarks>This division can lose money! Use <see cref="M:NodaMoney.Extensions.MoneyExtensions.SafeDivide(NodaMoney.Money,System.Int32)"/> to do a safe division.</remarks>
+        </member>
+        <member name="M:NodaMoney.Money.op_Division(NodaMoney.Money,NodaMoney.Money)">
+            <summary>Divides the <see cref="T:NodaMoney.Money"/> value by the given value.</summary>
+            <param name="left">A <see cref="T:NodaMoney.Money"/> object on the left side.</param>
+            <param name="right">A <see cref="T:NodaMoney.Money"/> object on the right side.</param>
+            <returns>The <see cref="T:System.Decimal"/> result of dividing left with right.</returns>
+            <remarks>Division of Money by Money, means the unit is lost, so the result will be a ratio <see cref="T:System.Decimal"/>.</remarks>
+        </member>
+        <member name="M:NodaMoney.Money.Add(NodaMoney.Money,NodaMoney.Money)">
+            <summary>Adds two specified <see cref="T:NodaMoney.Money"/> values.</summary>
+            <param name="money1">The first <see cref="T:NodaMoney.Money"/> object.</param>
+            <param name="money2">The second <see cref="T:NodaMoney.Money"/> object.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> object with the values of both <see cref="T:NodaMoney.Money"/> objects added.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.Add(NodaMoney.Money,System.Decimal)">
+            <summary>Adds two specified <see cref="T:NodaMoney.Money"/> values.</summary>
+            <param name="money1">The first <see cref="T:NodaMoney.Money"/> object.</param>
+            <param name="money2">The second <see cref="T:System.Decimal"/> object.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> object with the values of both <see cref="T:System.Decimal"/> objects added.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.Subtract(NodaMoney.Money,NodaMoney.Money)">
+            <summary>Subtracts one specified <see cref="T:NodaMoney.Money"/> value from another.</summary>
+            <param name="money1">The first <see cref="T:NodaMoney.Money"/> object.</param>
+            <param name="money2">The second <see cref="T:NodaMoney.Money"/> object.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> object where the second <see cref="T:NodaMoney.Money"/> object is subtracted from the first.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.Subtract(NodaMoney.Money,System.Decimal)">
+            <summary>Subtracts one specified <see cref="T:NodaMoney.Money"/> value from another.</summary>
+            <param name="money1">The first <see cref="T:NodaMoney.Money"/> object.</param>
+            <param name="money2">The second <see cref="T:System.Decimal"/> object.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> object where the second <see cref="T:System.Decimal"/> object is subtracted from the first.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.Multiply(NodaMoney.Money,System.Decimal)">
+            <summary>Multiplies the specified money.</summary>
+            <param name="money">The money.</param>
+            <param name="multiplier">The multiplier.</param>
+            <returns>The result as <see cref="T:NodaMoney.Money"/> after multiplying.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.Divide(NodaMoney.Money,System.Decimal)">
+            <summary>Divides the specified money.</summary>
+            <param name="money">The money.</param>
+            <param name="divisor">The divider.</param>
+            <returns>The division as <see cref="T:NodaMoney.Money"/>.</returns>
+            <remarks>This division can lose money! Use <see cref="M:NodaMoney.Extensions.MoneyExtensions.SafeDivide(NodaMoney.Money,System.Int32)"/> to do a safe division.</remarks>
+        </member>
+        <member name="M:NodaMoney.Money.Divide(NodaMoney.Money,NodaMoney.Money)">
+            <summary>Divides the specified money.</summary>
+            <param name="money1">The money.</param>
+            <param name="money2">The divider.</param>
+            <returns>The <see cref="T:System.Decimal"/> result of dividing left with right.</returns>
+            <remarks>Division of Money by Money, means the unit is lost, so the result will be Decimal.</remarks>
+        </member>
+        <member name="M:NodaMoney.Money.op_LessThan(NodaMoney.Money,NodaMoney.Money)">
+            <summary>Returns a value indicating whether a specified <see cref="T:NodaMoney.Money"/> is less than another specified <see cref="T:NodaMoney.Money"/>.</summary>
+            <param name="left">A <see cref="T:NodaMoney.Money"/> object on the left side.</param>
+            <param name="right">A <see cref="T:NodaMoney.Money"/> object on the right side.</param>
+            <returns>true if left is less than right; otherwise, false.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.op_GreaterThan(NodaMoney.Money,NodaMoney.Money)">
+            <summary>Returns a value indicating whether a specified <see cref="T:NodaMoney.Money"/> is greater than another specified <see cref="T:NodaMoney.Money"/>.</summary>
+            <param name="left">A <see cref="T:NodaMoney.Money"/> object on the left side.</param>
+            <param name="right">A <see cref="T:NodaMoney.Money"/> object on the right side.</param>
+            <returns>true if left is greater than right; otherwise, false.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.op_LessThanOrEqual(NodaMoney.Money,NodaMoney.Money)">
+            <summary>Returns a value indicating whether a specified <see cref="T:NodaMoney.Money"/> is less than or equal to another specified <see cref="T:NodaMoney.Money"/>.</summary>
+            <param name="left">A <see cref="T:NodaMoney.Money"/> object on the left side.</param>
+            <param name="right">A <see cref="T:NodaMoney.Money"/> object on the right side.</param>
+            <returns>true if left is less than or equal to right; otherwise, false.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.op_GreaterThanOrEqual(NodaMoney.Money,NodaMoney.Money)">
+            <summary>Returns a value indicating whether a specified <see cref="T:NodaMoney.Money"/> is greater than or equal to another specified <see cref="T:NodaMoney.Money"/>.</summary>
+            <param name="left">A <see cref="T:NodaMoney.Money"/> object on the left side.</param>
+            <param name="right">A <see cref="T:NodaMoney.Money"/> object on the right side.</param>
+            <returns>true if left is greater than or equal to right; otherwise, false.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.Compare(NodaMoney.Money,NodaMoney.Money)">
+            <summary>Compares two specified <see cref="T:NodaMoney.Money"/> values.</summary>
+            <param name="left">The first <see cref="T:NodaMoney.Money"/> object.</param>
+            <param name="right">The second <see cref="T:NodaMoney.Money"/> object.</param>
+            <returns>
+            A signed number indicating the relative values of this instance and value.
+            <list type="table">
+            <listheader>
+              <term>Return Value</term>
+              <description>Meaning</description>
+            </listheader>
+            <item>
+              <term>Less than zero</term>
+              <description>This instance is less than value.</description>
+            </item>
+            <item>
+              <term>Zero</term>
+              <description>This instance is equal to value.</description>
+            </item>
+            <item>
+              <term>Greater than zero </term>
+              <description>This instance is greater than value.</description>
+            </item>
+            </list>
+            </returns>
+        </member>
+        <member name="M:NodaMoney.Money.CompareTo(System.Object)">
+            <summary>Compares this instance to a specified <see cref="T:NodaMoney.Money"/> object.</summary>
+            <param name="obj">A <see cref="T:NodaMoney.Money"/> object.</param>
+            <returns>
+            A signed number indicating the relative values of this instance and value.
+            <list type="table">
+            <listheader>
+              <term>Return Value</term>
+              <description>Meaning</description>
+            </listheader>
+            <item>
+              <term>Less than zero</term>
+              <description>This instance is less than value.</description>
+            </item>
+            <item>
+              <term>Zero</term>
+              <description>This instance is equal to value.</description>
+            </item>
+            <item>
+              <term>Greater than zero </term>
+              <description>This instance is greater than value.</description>
+            </item>
+            </list>
+            </returns>
+            <exception cref="T:System.ArgumentException">object is not the same type as this instance</exception>
+        </member>
+        <member name="M:NodaMoney.Money.CompareTo(NodaMoney.Money)">
+            <summary>Compares this instance to a specified <see cref="T:System.Object"/>.</summary>
+            <param name="other">An <see cref="T:System.Object"/> or null.</param>
+            <returns>
+            A signed number indicating the relative values of this instance and value.
+            <list type="table">
+            <listheader>
+              <term>Return Value</term>
+              <description>Meaning</description>
+            </listheader>
+            <item>
+              <term>Less than zero</term>
+              <description>This instance is less than value.</description>
+            </item>
+            <item>
+              <term>Zero</term>
+              <description>This instance is equal to value.</description>
+            </item>
+            <item>
+              <term>Greater than zero </term>
+              <description>This instance is greater than value.</description>
+            </item>
+            </list>
+            </returns>
+        </member>
+        <member name="M:NodaMoney.Money.op_Explicit(NodaMoney.Money)~System.Double">
+            <summary>Performs an explicit conversion from <see cref="T:NodaMoney.Money"/> to <see cref="T:System.Double"/>.</summary>
+            <param name="money">The money.</param>
+            <returns>The result of the conversion.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.op_Explicit(NodaMoney.Money)~System.Int64">
+            <summary>Performs an explicit conversion from <see cref="T:NodaMoney.Money"/> to <see cref="T:System.Int64"/>.</summary>
+            <param name="money">The money.</param>
+            <returns>The result of the conversion.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.op_Explicit(NodaMoney.Money)~System.Decimal">
+            <summary>Performs an explicit conversion from <see cref="T:NodaMoney.Money"/> to <see cref="T:System.Decimal"/>.</summary>
+            <param name="money">The money.</param>
+            <returns>The result of the conversion.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.op_Implicit(System.Int64)~NodaMoney.Money">
+            <summary>Performs an implicit conversion from <see cref="T:System.Int64"/> to <see cref="T:NodaMoney.Money"/>.</summary>
+            <param name="money">The money.</param>
+            <returns>The result of the conversion.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.op_Implicit(System.UInt64)~NodaMoney.Money">
+            <summary>Performs an implicit conversion from <see cref="T:System.UInt64"/> to <see cref="T:NodaMoney.Money"/>.</summary>
+            <param name="money">The money.</param>
+            <returns>The result of the conversion.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.op_Implicit(System.Byte)~NodaMoney.Money">
+            <summary>Performs an implicit conversion from <see cref="T:System.Byte"/> to <see cref="T:NodaMoney.Money"/>.</summary>
+            <param name="money">The money.</param>
+            <returns>The result of the conversion.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.op_Implicit(System.UInt16)~NodaMoney.Money">
+            <summary>Performs an implicit conversion from <see cref="T:System.UInt16"/> to <see cref="T:NodaMoney.Money"/>.</summary>
+            <param name="money">The money.</param>
+            <returns>The result of the conversion.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.op_Implicit(System.UInt32)~NodaMoney.Money">
+            <summary>Performs an implicit conversion from <see cref="T:System.UInt32"/> to <see cref="T:NodaMoney.Money"/>.</summary>
+            <param name="money">The money.</param>
+            <returns>The result of the conversion.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.op_Explicit(System.Double)~NodaMoney.Money">
+            <summary>Performs an implicit conversion from <see cref="T:System.Double"/> to <see cref="T:NodaMoney.Money"/>.</summary>
+            <param name="money">The money.</param>
+            <returns>The result of the conversion.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.op_Implicit(System.Decimal)~NodaMoney.Money">
+            <summary>Performs an implicit conversion from <see cref="T:System.Decimal"/> to <see cref="T:NodaMoney.Money"/>.</summary>
+            <param name="money">The money.</param>
+            <returns>The result of the conversion.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.ToSingle(NodaMoney.Money)">
+            <summary>Converts the value of this instance to an <see cref="T:System.Single"/>.</summary>
+            <param name="money">A <see cref="T:NodaMoney.Money"/> value.</param>
+            <returns>The value of the <see cref="T:NodaMoney.Money"/> instance, converted to a <see cref="T:System.Single"/>.</returns>
+            <remarks>Because a <see cref="T:System.Single"/> has fewer significant digits than a <see cref="T:NodaMoney.Money"/> value, this operation may
+            produce round-off errors. Also the <see cref="P:NodaMoney.Money.Currency"/> information is lost.</remarks>
+        </member>
+        <member name="M:NodaMoney.Money.ToDouble(NodaMoney.Money)">
+            <summary>Converts the value of this instance to an <see cref="T:System.Double"/>.</summary>
+            <param name="money">A <see cref="T:NodaMoney.Money"/> value.</param>
+            <returns>The value of the current instance, converted to a <see cref="T:System.Double"/>.</returns>
+            <remarks>Because a Double has fewer significant digits than a <see cref="T:NodaMoney.Money"/> value, this operation may produce round-off
+            errors.</remarks>
+        </member>
+        <member name="M:NodaMoney.Money.ToDecimal(NodaMoney.Money)">
+            <summary>Converts the value of this instance to an <see cref="T:System.Decimal"/>.</summary>
+            <param name="money">A <see cref="T:NodaMoney.Money"/> value.</param>
+            <returns>The value of the <see cref="T:NodaMoney.Money"/> instance, converted to a <see cref="T:System.Decimal"/>.</returns>
+            <remarks>The <see cref="P:NodaMoney.Money.Currency"/> information is lost.</remarks>
+        </member>
+        <member name="M:NodaMoney.Money.ToBoolean(System.IFormatProvider)">
+            <summary>Converts the value of this instance to an equivalent Boolean value using the specified culture-specific
+            formatting information.</summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies
+            culture-specific formatting information.</param>
+            <returns>A Boolean value equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.ToByte(System.IFormatProvider)">
+            <summary>Converts the value of this instance to an equivalent 8-bit unsigned integer using the specified
+            culture-specific formatting information.</summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies
+            culture-specific formatting information.</param>
+            <returns>An 8-bit unsigned integer equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.ToChar(System.IFormatProvider)">
+            <summary>Converts the value of this instance to an equivalent Unicode character using the specified culture-specific
+            formatting information.</summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies
+            culture-specific formatting information.</param>
+            <returns>A Unicode character equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.ToDateTime(System.IFormatProvider)">
+            <summary>Converts the value of this instance to an equivalent <see cref="T:System.DateTime"/> using the specified
+            culture-specific formatting information.</summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies
+            culture-specific formatting information.</param>
+            <returns>A <see cref="T:System.DateTime"/> instance equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.ToDecimal(System.IFormatProvider)">
+            <summary>Converts the value of this instance to an equivalent <see cref="T:System.Decimal"/> number using the specified
+            culture-specific formatting information.</summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies
+            culture-specific formatting information.</param>
+            <returns>A <see cref="T:System.Decimal"/> number equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.ToDouble(System.IFormatProvider)">
+            <summary>Converts the value of this instance to an equivalent double-precision floating-point number using the
+            specified culture-specific formatting information.</summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies
+            culture-specific formatting information.</param>
+            <returns>A double-precision floating-point number equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.ToInt16(System.IFormatProvider)">
+            <summary>Converts the value of this instance to an equivalent 16-bit signed integer using the specified
+            culture-specific formatting information.</summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies
+            culture-specific formatting information.</param>
+            <returns>An 16-bit signed integer equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.ToInt32(System.IFormatProvider)">
+            <summary>Converts the value of this instance to an equivalent 32-bit signed integer using the specified
+            culture-specific formatting information.</summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies
+            culture-specific formatting information.</param>
+            <returns>An 32-bit signed integer equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.ToInt64(System.IFormatProvider)">
+            <summary>Converts the value of this instance to an equivalent 64-bit signed integer using the specified
+            culture-specific formatting information.</summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies
+            culture-specific formatting information.</param>
+            <returns>An 64-bit signed integer equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.ToSByte(System.IFormatProvider)">
+            <summary>Converts the value of this instance to an equivalent 8-bit signed integer using the specified culture-specific
+            formatting information.</summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies
+            culture-specific formatting information.</param>
+            <returns>An 8-bit signed integer equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.ToSingle(System.IFormatProvider)">
+            <summary>Converts the value of this instance to an equivalent single-precision floating-point number using the
+            specified culture-specific formatting information.</summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies
+            culture-specific formatting information.</param>
+            <returns>A single-precision floating-point number equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.ToType(System.Type,System.IFormatProvider)">
+            <summary>Converts the value of this instance to an <see cref="T:System.Object"/> of the specified<see cref="T:System.Type"/> that has an equivalent value, using the specified culture-specific formatting information.</summary>
+            <param name="conversionType">The <see cref="T:System.Type"/> to which the value of this instance is converted.</param>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies
+            culture-specific formatting information.</param>
+            <returns>An <see cref="T:System.Object"/> instance of type <paramref name="conversionType"/> whose value is equivalent
+            to the value of this instance.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.ToUInt16(System.IFormatProvider)">
+            <summary>Converts the value of this instance to an equivalent 16-bit unsigned integer using the specified
+            culture-specific formatting information.</summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies
+            culture-specific formatting information.</param>
+            <returns>An 16-bit unsigned integer equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.ToUInt32(System.IFormatProvider)">
+            <summary>Converts the value of this instance to an equivalent 32-bit unsigned integer using the specified
+            culture-specific formatting information.</summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies
+            culture-specific formatting information.</param>
+            <returns>An 32-bit unsigned integer equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.ToUInt64(System.IFormatProvider)">
+            <summary>Converts the value of this instance to an equivalent 64-bit unsigned integer using the specified
+            culture-specific formatting information.</summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies
+            culture-specific formatting information.</param>
+            <returns>An 64-bit unsigned integer equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.#ctor(System.Decimal)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> struct, based on the current culture.</summary>
+            <param name="amount">The Amount of money as <see langword="decimal"/>.</param>
+            <remarks>The amount will be rounded to the number of decimal digits of the specified currency
+            (<see cref="P:NodaMoney.Currency.DecimalDigits"/>). As rounding mode, MidpointRounding.ToEven is used
+            (<see cref="T:System.MidpointRounding"/>). The behavior of this method follows IEEE Standard 754, section 4. This
+            kind of rounding is sometimes called rounding to nearest, or banker's rounding. It minimizes rounding errors that
+            result from consistently rounding a midpoint value in a single direction.</remarks>
+        </member>
+        <member name="M:NodaMoney.Money.#ctor(System.Decimal,System.String)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> struct, based on a ISO 4217 Currency code.</summary>
+            <param name="amount">The Amount of money as <see langword="decimal"/>.</param>
+            <param name="code">A ISO 4217 Currency code, like EUR or USD.</param>
+            <remarks>The amount will be rounded to the number of decimal digits of the specified currency
+            (<see cref="P:NodaMoney.Currency.DecimalDigits"/>). As rounding mode, MidpointRounding.ToEven is used
+            (<see cref="T:System.MidpointRounding"/>). The behavior of this method follows IEEE Standard 754, section 4. This
+            kind of rounding is sometimes called rounding to nearest, or banker's rounding. It minimizes rounding errors that
+            result from consistently rounding a midpoint value in a single direction.</remarks>
+        </member>
+        <member name="M:NodaMoney.Money.#ctor(System.Decimal,System.MidpointRounding)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> struct, based on the current culture.</summary>
+            <param name="amount">The Amount of money as <see langword="decimal"/>.</param>
+            <param name="rounding">The rounding mode.</param>
+            <remarks>The amount will be rounded to the number of decimal digits of the specified currency
+            (<see cref="P:NodaMoney.Currency.DecimalDigits"/>).</remarks>
+        </member>
+        <member name="M:NodaMoney.Money.#ctor(System.Decimal,NodaMoney.Currency)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> struct.</summary>
+            <param name="amount">The Amount of money as <see langword="decimal"/>.</param>
+            <param name="currency">The Currency of the money.</param>
+            <remarks>The amount will be rounded to the number of decimal digits of the specified currency
+            (<see cref="P:NodaMoney.Currency.DecimalDigits"/>). As rounding mode, MidpointRounding.ToEven is used
+            (<see cref="T:System.MidpointRounding"/>). The behavior of this method follows IEEE Standard 754, section 4. This
+            kind of rounding is sometimes called rounding to nearest, or banker's rounding. It minimizes rounding errors that
+            result from consistently rounding a midpoint value in a single direction.</remarks>
+        </member>
+        <member name="M:NodaMoney.Money.#ctor(System.Decimal,System.String,System.MidpointRounding)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> struct, based on a ISO 4217 Currency code.</summary>
+            <param name="amount">The Amount of money as <see langword="decimal"/>.</param>
+            <param name="code">A ISO 4217 Currency code, like EUR or USD.</param>
+            <param name="rounding">The rounding mode.</param>
+            <remarks>The amount will be rounded to the number of decimal digits of the specified currency
+            (<see cref="P:NodaMoney.Currency.DecimalDigits"/>).</remarks>
+        </member>
+        <member name="M:NodaMoney.Money.#ctor(System.Decimal,NodaMoney.Currency,System.MidpointRounding)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> struct</summary>
+            <param name="amount">The Amount of money as <see langword="decimal"/>.</param>
+            <param name="currency">The Currency of the money.</param>
+            <param name="rounding">The rounding mode.</param>
+            <remarks>The amount will be rounded to the number of decimal digits of the specified currency
+            (<see cref="P:NodaMoney.Currency.DecimalDigits"/>).</remarks>
+        </member>
+        <member name="M:NodaMoney.Money.#ctor(System.Double)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> struct, based on the current culture.</summary>
+            <param name="amount">The Amount of money as <see langword="double"/> or <see langword="float"/> (float is implicitly
+            casted to double).</param>
+            <remarks>This constructor will first convert to decimal by rounding the value to 15 significant digits using rounding
+            to nearest. This is done even if the number has more than 15 digits and the less significant digits are zero.
+            <para>The amount will be rounded to the number of decimal digits of the specified currency
+            (<see cref="P:NodaMoney.Currency.DecimalDigits"/>). As rounding mode, MidpointRounding.ToEven is used
+            (<see cref="T:System.MidpointRounding"/>). The behavior of this method follows IEEE Standard 754, section 4. This
+            kind of rounding is sometimes called rounding to nearest, or banker's rounding. It minimizes rounding errors that
+            result from consistently rounding a midpoint value in a single direction.</para></remarks>
+        </member>
+        <member name="M:NodaMoney.Money.#ctor(System.Double,System.String)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> struct, based on a ISO 4217 Currency code.</summary>
+            <param name="amount">The Amount of money as <see langword="double"/> or <see langword="float"/> (float is implicitly
+            casted to double).</param>
+            <param name="code">A ISO 4217 Currency code, like EUR or USD.</param>
+            <remarks>This constructor will first convert to decimal by rounding the value to 15 significant digits using rounding
+            to nearest. This is done even if the number has more than 15 digits and the less significant digits are zero.
+            <para>The amount will be rounded to the number of decimal digits of the specified currency
+            (<see cref="P:NodaMoney.Currency.DecimalDigits"/>). As rounding mode, MidpointRounding.ToEven is used
+            (<see cref="T:System.MidpointRounding"/>). The behavior of this method follows IEEE Standard 754, section 4. This
+            kind of rounding is sometimes called rounding to nearest, or banker's rounding. It minimizes rounding errors that
+            result from consistently rounding a midpoint value in a single direction.</para></remarks>
+        </member>
+        <member name="M:NodaMoney.Money.#ctor(System.Double,NodaMoney.Currency)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> struct.</summary>
+            <param name="amount">The Amount of money as <see langword="double"/> or <see langword="float"/> (float is implicitly
+            casted to double).</param>
+            <param name="currency">The Currency of the money.</param>
+            <remarks>This constructor will first convert to decimal by rounding the value to 15 significant digits using rounding
+            to nearest. This is done even if the number has more than 15 digits and the less significant digits are zero.
+            <para>The amount will be rounded to the number of decimal digits of the specified currency
+            (<see cref="P:NodaMoney.Currency.DecimalDigits"/>). As rounding mode, MidpointRounding.ToEven is used
+            (<see cref="T:System.MidpointRounding"/>). The behavior of this method follows IEEE Standard 754, section 4. This
+            kind of rounding is sometimes called rounding to nearest, or banker's rounding. It minimizes rounding errors that
+            result from consistently rounding a midpoint value in a single direction.</para></remarks>
+        </member>
+        <member name="M:NodaMoney.Money.#ctor(System.Double,NodaMoney.Currency,System.MidpointRounding)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> struct.</summary>
+            <param name="amount">The Amount of money as <see langword="double"/> or <see langword="float"/> (float is implicitly
+            casted to double).</param>
+            <param name="currency">The Currency of the money.</param>
+            <param name="rounding">The rounding mode.</param>
+            <remarks>This constructor will first convert to decimal by rounding the value to 15 significant digits using rounding
+            to nearest. This is done even if the number has more than 15 digits and the less significant digits are zero.
+            <para>The amount will be rounded to the number of decimal digits of the specified currency
+            (<see cref="P:NodaMoney.Currency.DecimalDigits"/>).</para></remarks>
+        </member>
+        <member name="M:NodaMoney.Money.#ctor(System.Int64)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> struct, based on the current culture.</summary>
+            <param name="amount">The Amount of money as <see langword="long"/>, <see langword="int"/>, <see langword="short"/> or<see cref="T:System.Byte"/>.</param>
+            <remarks>The integral types are implicitly converted to long and the result evaluates to decimal. Therefore you can
+            initialize a Money object using an integer literal, without the suffix, as follows:
+            <code>Money money = new Money(10, Currency.FromIsoSymbol("EUR"));</code></remarks>
+        </member>
+        <member name="M:NodaMoney.Money.#ctor(System.Int64,System.String)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> struct, based on a ISO 4217 Currency code.</summary>
+            <param name="amount">The Amount of money as <see langword="long"/>, <see langword="int"/>, <see langword="short"/> or<see cref="T:System.Byte"/>.</param>
+            <param name="code">A ISO 4217 Currency code, like EUR or USD.</param>
+            <remarks>The integral types are implicitly converted to long and the result evaluates to decimal. Therefore you can
+            initialize a Money object using an integer literal, without the suffix, as follows:
+            <code>Money money = new Money(10, "EUR");</code></remarks>
+        </member>
+        <member name="M:NodaMoney.Money.#ctor(System.Int64,NodaMoney.Currency)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> struct.</summary>
+            <param name="amount">The Amount of money as <see langword="long"/>, <see langword="int"/>, <see langword="short"/> or<see cref="T:System.Byte"/>.</param>
+            <param name="currency">The Currency of the money.</param>
+            <remarks>The integral types are implicitly converted to long and the result evaluates to decimal. Therefore you can
+            initialize a Money object using an integer literal, without the suffix, as follows:
+            <code>Money money = new Money(10, "EUR");</code></remarks>
+        </member>
+        <member name="M:NodaMoney.Money.#ctor(System.UInt64)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> struct, based on the current culture.</summary>
+            <param name="amount">The Amount of money as <see langword="ulong"/>, <see langword="uint"/>, <see langword="ushort"/>
+            or <see cref="T:System.Byte"/>.</param>
+            <remarks>The integral types are implicitly converted to long and the result evaluates to decimal. Therefore you can
+            initialize a Money object using an integer literal, without the suffix, as follows:
+            <code>Money money = new Money(10, "EUR");</code></remarks>
+        </member>
+        <member name="M:NodaMoney.Money.#ctor(System.UInt64,System.String)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> struct, based on a ISO 4217 Currency code.</summary>
+            <param name="amount">The Amount of money as <see langword="ulong"/>, <see langword="uint"/>, <see langword="ushort"/>
+            or <see cref="T:System.Byte"/>.</param>
+            <param name="code">A ISO 4217 Currency code, like EUR or USD.</param>
+            <remarks>The integral types are implicitly converted to long and the result evaluates to decimal. Therefore you can
+            initialize a Money object using an integer literal, without the suffix, as follows:
+            <code>Money money = new Money(10, "EUR");</code></remarks>
+        </member>
+        <member name="M:NodaMoney.Money.#ctor(System.UInt64,NodaMoney.Currency)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> struct.</summary>
+            <param name="amount">The Amount of money as <see langword="ulong"/>, <see langword="uint"/>, <see langword="ushort"/>
+            or <see cref="T:System.Byte"/>.</param>
+            <param name="currency">The Currency of the money.</param>
+            <remarks>The integral types are implicitly converted to long and the result evaluates to decimal. Therefore you can
+            initialize a Money object using an integer literal, without the suffix, as follows:
+            <code>Money money = new Money(10, Currency.FromIsoSymbol("EUR"));</code></remarks>
+        </member>
+        <member name="M:NodaMoney.Money.Deconstruct(System.Decimal@,NodaMoney.Currency@)">
+            <summary>Deconstructs the current instance into its components.</summary>
+            <param name="amount">The Amount of money as <see langword="decimal"/>.</param>
+            <param name="currency">The Currency of the money.</param>
+        </member>
+        <member name="P:NodaMoney.Money.Amount">
+            <summary>Gets the amount of money.</summary>
+        </member>
+        <member name="P:NodaMoney.Money.Currency">
+            <summary>Gets the <see cref="P:NodaMoney.Money.Currency"/> of the money.</summary>
+        </member>
+        <member name="M:NodaMoney.Money.op_Equality(NodaMoney.Money,NodaMoney.Money)">
+            <summary>Returns a value indicating whether two instances of <see cref="T:NodaMoney.Money"/> are equal.</summary>
+            <param name="left">A <see cref="T:NodaMoney.Money"/> object on the left side.</param>
+            <param name="right">A <see cref="T:NodaMoney.Money"/> object on the right side.</param>
+            <returns>true if left and right are equal; otherwise, false.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.op_Inequality(NodaMoney.Money,NodaMoney.Money)">
+            <summary>Returns a value indicating whether two instances of <see cref="T:NodaMoney.Money"/> are not equal.</summary>
+            <param name="left">A <see cref="T:NodaMoney.Money"/> object on the left side.</param>
+            <param name="right">A <see cref="T:NodaMoney.Money"/> object on the right side.</param>
+            <returns>true if left and right are not equal; otherwise, false.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.Equals(NodaMoney.Money)">
+            <summary>Returns a value indicating whether this instance and a specified <see cref="T:NodaMoney.Money"/> object represent the same
+            value.</summary>
+            <param name="other">A <see cref="T:NodaMoney.Money"/> object.</param>
+            <returns>true if value is equal to this instance; otherwise, false.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.Equals(System.Object)">
+            <summary>Returns a value indicating whether this instance and a specified <see cref="T:System.Object"/> represent the same type
+            and value.</summary>
+            <param name="obj">An <see cref="T:System.Object"/>.</param>
+            <returns>true if value is equal to this instance; otherwise, false.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.GetHashCode">
+            <summary>Returns the hash code for this instance.</summary>
+            <returns>A 32-bit signed integer hash code.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.Euro(System.Decimal)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> structure in euro's.</summary>
+            <param name="amount">The Amount of money in euro.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> structure with EUR as <see cref="P:NodaMoney.Money.Currency"/>.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.Euro(System.Decimal,System.MidpointRounding)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> structure in euro's.</summary>
+            <param name="amount">The Amount of money in euro.</param>
+            <param name="rounding">The rounding.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> structure with EUR as <see cref="P:NodaMoney.Money.Currency"/>.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.Euro(System.Double)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> structure in euro's.</summary>
+            <param name="amount">The Amount of money in euro.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> structure with EUR as <see cref="P:NodaMoney.Money.Currency"/>.</returns>
+            <remarks>This method will first convert to decimal by rounding the value to 15 significant digits using rounding
+            to nearest. This is done even if the number has more than 15 digits and the less significant digits are zero.
+            <para>The amount will be rounded to the number of decimal digits of the specified currency
+            (<see cref="P:NodaMoney.Currency.DecimalDigits"/>). As rounding mode, MidpointRounding.ToEven is used
+            (<see cref="T:System.MidpointRounding"/>). The behavior of this method follows IEEE Standard 754, section 4. This
+            kind of rounding is sometimes called rounding to nearest, or banker's rounding. It minimizes rounding errors that
+            result from consistently rounding a midpoint value in a single direction.</para></remarks>
+        </member>
+        <member name="M:NodaMoney.Money.Euro(System.Double,System.MidpointRounding)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> structure in euro's.</summary>
+            <param name="amount">The Amount of money in euro.</param>
+            <param name="rounding">The rounding.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> structure with EUR as <see cref="P:NodaMoney.Money.Currency"/>.</returns>
+            <remarks>This method will first convert to decimal by rounding the value to 15 significant digits using rounding
+            to nearest. This is done even if the number has more than 15 digits and the less significant digits are zero.
+            <para>The amount will be rounded to the number of decimal digits of the specified currency
+            (<see cref="P:NodaMoney.Currency.DecimalDigits"/>).</para></remarks>
+        </member>
+        <member name="M:NodaMoney.Money.Euro(System.Int64)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> structure in euro's.</summary>
+            <param name="amount">The Amount of money in euro.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> structure with EUR as <see cref="P:NodaMoney.Money.Currency"/>.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.Euro(System.UInt64)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> structure in euro's.</summary>
+            <param name="amount">The Amount of money in euro.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> structure with EUR as <see cref="P:NodaMoney.Money.Currency"/>.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.USDollar(System.Decimal)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> structure in US dollars.</summary>
+            <param name="amount">The Amount of money in US dollar.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> structure with USD as <see cref="P:NodaMoney.Money.Currency"/>.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.USDollar(System.Decimal,System.MidpointRounding)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> structure in US dollars.</summary>
+            <param name="amount">The Amount of money in euro.</param>
+            <param name="rounding">The rounding.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> structure with USD as <see cref="P:NodaMoney.Money.Currency"/>.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.USDollar(System.Double)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> structure in US dollars.</summary>
+            <param name="amount">The Amount of money in US dollar.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> structure with USD as <see cref="P:NodaMoney.Money.Currency"/>.</returns>
+            <remarks>This method will first convert to decimal by rounding the value to 15 significant digits using rounding
+            to nearest. This is done even if the number has more than 15 digits and the less significant digits are zero.
+            <para>The amount will be rounded to the number of decimal digits of the specified currency
+            (<see cref="P:NodaMoney.Currency.DecimalDigits"/>). As rounding mode, MidpointRounding.ToEven is used
+            (<see cref="T:System.MidpointRounding"/>). The behavior of this method follows IEEE Standard 754, section 4. This
+            kind of rounding is sometimes called rounding to nearest, or banker's rounding. It minimizes rounding errors that
+            result from consistently rounding a midpoint value in a single direction.</para></remarks>
+        </member>
+        <member name="M:NodaMoney.Money.USDollar(System.Double,System.MidpointRounding)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> structure in US dollars.</summary>
+            <param name="amount">The Amount of money in US dollar.</param>
+            <param name="rounding">The rounding.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> structure with USD as <see cref="P:NodaMoney.Money.Currency"/>.</returns>
+            <remarks>This method will first convert to decimal by rounding the value to 15 significant digits using rounding
+            to nearest. This is done even if the number has more than 15 digits and the less significant digits are zero.
+            <para>The amount will be rounded to the number of decimal digits of the specified currency
+            (<see cref="P:NodaMoney.Currency.DecimalDigits"/>).</para></remarks>
+        </member>
+        <member name="M:NodaMoney.Money.USDollar(System.Int64)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> structure in US dollars.</summary>
+            <param name="amount">The Amount of money in US dollar.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> structure with USD as <see cref="P:NodaMoney.Money.Currency"/>.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.USDollar(System.UInt64)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> structure in US dollars.</summary>
+            <param name="amount">The Amount of money in US dollar.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> structure with USD as <see cref="P:NodaMoney.Money.Currency"/>.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.Yen(System.Decimal)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> structure in Japanese Yens.</summary>
+            <param name="amount">The Amount of money in Japanese Yen.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> structure with JPY as <see cref="P:NodaMoney.Money.Currency"/>.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.Yen(System.Decimal,System.MidpointRounding)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> structure in Japanese Yens.</summary>
+            <param name="amount">The Amount of money in Japanese Yens.</param>
+            <param name="rounding">The rounding.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> structure with JPY as <see cref="P:NodaMoney.Money.Currency"/>.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.Yen(System.Double)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> structure in Japanese Yens.</summary>
+            <param name="amount">The Amount of money in Japanese Yen.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> structure with JPY as <see cref="P:NodaMoney.Money.Currency"/>.</returns>
+            <remarks>This method will first convert to decimal by rounding the value to 15 significant digits using rounding
+            to nearest. This is done even if the number has more than 15 digits and the less significant digits are zero.
+            <para>The amount will be rounded to the number of decimal digits of the specified currency
+            (<see cref="P:NodaMoney.Currency.DecimalDigits"/>). As rounding mode, MidpointRounding.ToEven is used
+            (<see cref="T:System.MidpointRounding"/>). The behavior of this method follows IEEE Standard 754, section 4. This
+            kind of rounding is sometimes called rounding to nearest, or banker's rounding. It minimizes rounding errors that
+            result from consistently rounding a midpoint value in a single direction.</para></remarks>
+        </member>
+        <member name="M:NodaMoney.Money.Yen(System.Double,System.MidpointRounding)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> structure in Japanese Yens.</summary>
+            <param name="amount">The Amount of money in Japanese Yen.</param>
+            <param name="rounding">The rounding.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> structure with JPY as <see cref="P:NodaMoney.Money.Currency"/>.</returns>
+            <remarks>This method will first convert to decimal by rounding the value to 15 significant digits using rounding
+            to nearest. This is done even if the number has more than 15 digits and the less significant digits are zero.
+            <para>The amount will be rounded to the number of decimal digits of the specified currency
+            (<see cref="P:NodaMoney.Currency.DecimalDigits"/>).</para></remarks>
+        </member>
+        <member name="M:NodaMoney.Money.Yen(System.Int64)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> structure in Japanese Yens.</summary>
+            <param name="amount">The Amount of money in Japanese Yen.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> structure with JPY as <see cref="P:NodaMoney.Money.Currency"/>.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.Yen(System.UInt64)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> structure in Japanese Yens.</summary>
+            <param name="amount">The Amount of money in Japanese Yen.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> structure with JPY as <see cref="P:NodaMoney.Money.Currency"/>.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.PoundSterling(System.Decimal)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> structure in British pounds.</summary>
+            <param name="amount">The Amount of money in Pound Sterling.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> structure with GBP as <see cref="P:NodaMoney.Money.Currency"/>.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.PoundSterling(System.Decimal,System.MidpointRounding)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> structure in British pounds.</summary>
+            <param name="amount">The Amount of money in euro.</param>
+            <param name="rounding">The rounding.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> structure with GBP as <see cref="P:NodaMoney.Money.Currency"/>.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.PoundSterling(System.Double)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> structure in British pounds.</summary>
+            <param name="amount">The Amount of money in Pound Sterling.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> structure with GBP as <see cref="P:NodaMoney.Money.Currency"/>.</returns>
+            <remarks>This method will first convert to decimal by rounding the value to 15 significant digits using rounding
+            to nearest. This is done even if the number has more than 15 digits and the less significant digits are zero.
+            <para>The amount will be rounded to the number of decimal digits of the specified currency
+            (<see cref="P:NodaMoney.Currency.DecimalDigits"/>). As rounding mode, MidpointRounding.ToEven is used
+            (<see cref="T:System.MidpointRounding"/>). The behavior of this method follows IEEE Standard 754, section 4. This
+            kind of rounding is sometimes called rounding to nearest, or banker's rounding. It minimizes rounding errors that
+            result from consistently rounding a midpoint value in a single direction.</para></remarks>
+        </member>
+        <member name="M:NodaMoney.Money.PoundSterling(System.Double,System.MidpointRounding)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> structure in British pounds.</summary>
+            <param name="amount">The Amount of money in Pound Sterling.</param>
+            <param name="rounding">The rounding.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> structure with GBP as <see cref="P:NodaMoney.Money.Currency"/>.</returns>
+            <remarks>This method will first convert to decimal by rounding the value to 15 significant digits using rounding
+            to nearest. This is done even if the number has more than 15 digits and the less significant digits are zero.
+            <para>The amount will be rounded to the number of decimal digits of the specified currency
+            (<see cref="P:NodaMoney.Currency.DecimalDigits"/>).</para></remarks>
+        </member>
+        <member name="M:NodaMoney.Money.PoundSterling(System.Int64)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> structure in British pounds.</summary>
+            <param name="amount">The Amount of money in Pound Sterling.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> structure with GBP as <see cref="P:NodaMoney.Money.Currency"/>.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.PoundSterling(System.UInt64)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> structure in British pounds.</summary>
+            <param name="amount">The Amount of money in Pound Sterling.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> structure with GBP as <see cref="P:NodaMoney.Money.Currency"/>.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.Yuan(System.Decimal)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> structure in Chinese Yuan.</summary>
+            <param name="amount">The Amount of money in Chinese Yuan.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> structure with CNY as <see cref="P:NodaMoney.Money.Currency"/>.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.Yuan(System.Decimal,System.MidpointRounding)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> structure in Chinese Yuan.</summary>
+            <param name="amount">The Amount of money in Chinese Yuan.</param>
+            <param name="rounding">The rounding.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> structure with CNY as <see cref="P:NodaMoney.Money.Currency"/>.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.Yuan(System.Double)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> structure in Chinese Yuan.</summary>
+            <param name="amount">The Amount of money in Chinese Yuan.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> structure with CNY as <see cref="P:NodaMoney.Money.Currency"/>.</returns>
+            <remarks>This method will first convert to decimal by rounding the value to 15 significant digits using rounding
+            to nearest. This is done even if the number has more than 15 digits and the less significant digits are zero.
+            <para>The amount will be rounded to the number of decimal digits of the specified currency
+            (<see cref="P:NodaMoney.Currency.DecimalDigits"/>). As rounding mode, MidpointRounding.ToEven is used
+            (<see cref="T:System.MidpointRounding"/>). The behavior of this method follows IEEE Standard 754, section 4. This
+            kind of rounding is sometimes called rounding to nearest, or banker's rounding. It minimizes rounding errors that
+            result from consistently rounding a midpoint value in a single direction.</para></remarks>
+        </member>
+        <member name="M:NodaMoney.Money.Yuan(System.Double,System.MidpointRounding)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> structure in Chinese Yuan.</summary>
+            <param name="amount">The Amount of money in Chinese Yuan.</param>
+            <param name="rounding">The rounding.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> structure with CNY as <see cref="P:NodaMoney.Money.Currency"/>.</returns>
+            <remarks>This method will first convert to decimal by rounding the value to 15 significant digits using rounding
+            to nearest. This is done even if the number has more than 15 digits and the less significant digits are zero.
+            <para>The amount will be rounded to the number of decimal digits of the specified currency
+            (<see cref="P:NodaMoney.Currency.DecimalDigits"/>).</para></remarks>
+        </member>
+        <member name="M:NodaMoney.Money.Yuan(System.Int64)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> structure in Chinese Yuan.</summary>
+            <param name="amount">The Amount of money in Chinese Yuan.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> structure with CNY as <see cref="P:NodaMoney.Money.Currency"/>.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.Yuan(System.UInt64)">
+            <summary>Initializes a new instance of the <see cref="T:NodaMoney.Money"/> structure in Chinese Yuan.</summary>
+            <param name="amount">The Amount of money in Chinese Yuan.</param>
+            <returns>A <see cref="T:NodaMoney.Money"/> structure with CNY as <see cref="P:NodaMoney.Money.Currency"/>.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.ToString">
+            <summary>Converts this <see cref="T:NodaMoney.Money"/> instance to its equivalent <see cref="T:System.String"/> representation.</summary>
+            <returns>A string that represents this <see cref="T:NodaMoney.Money"/> instance.</returns>
+            <remarks>
+            Converting will use the <see cref="T:System.Globalization.NumberFormatInfo"/> object for the current culture if this has the same
+            ISOCurrencySymbol, otherwise the <see cref="T:System.Globalization.NumberFormatInfo"/> from the <see cref="P:NodaMoney.Money.Currency"/> will be used.
+            </remarks>
+        </member>
+        <member name="M:NodaMoney.Money.ToString(System.String)">
+            <summary>Converts the <see cref="T:NodaMoney.Money"/> value of this instance to its equivalent <see cref="T:System.String"/> representation
+            using the specified format.</summary>
+            <param name="format">A numeric format string.</param>
+            <returns>The string representation of this <see cref="T:NodaMoney.Money"/> instance as specified by the format.</returns>
+            <exception cref="T:System.ArgumentNullException">The value of 'format' cannot be null.</exception>
+        </member>
+        <member name="M:NodaMoney.Money.ToString(System.IFormatProvider)">
+            <summary>Converts this <see cref="T:NodaMoney.Money"/> instance to its equivalent <see cref="T:System.String"/> representation using the
+            specified culture-specific format information.</summary>
+            <param name="formatProvider">An <see cref="T:System.IFormatProvider"/> that supplies culture-specific formatting information.</param>
+            <returns>The string representation of this <see cref="T:NodaMoney.Money"/> instance as specified by formatProvider.</returns>
+            <exception cref="T:System.ArgumentNullException">The value of 'formatProvider' cannot be null.</exception>
+        </member>
+        <member name="M:NodaMoney.Money.ToString(System.String,System.IFormatProvider)">
+            <summary>Converts the <see cref="T:NodaMoney.Money"/> value of this instance to its equivalent <see cref="T:System.String"/> representation
+            using the specified format and culture-specific format information.</summary>
+            <param name="format">A numeric format string.</param>
+            <param name="formatProvider">An <see cref="T:System.IFormatProvider"/> that supplies culture-specific formatting information.</param>
+            <returns>The string representation of this <see cref="T:NodaMoney.Money"/> instance as specified by the format and formatProvider.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.Parse(System.String)">
+            <summary>Converts the string representation of a money value to its <see cref="T:NodaMoney.Money"/> equivalent.</summary>
+            <param name="value">The string representation of the number to convert.</param>
+            <returns>The equivalent to the money amount contained in <i>value</i>.</returns>
+            <exception cref="T:System.ArgumentNullException"><i>value</i> is <b>null</b> or empty.</exception>
+            <exception cref="T:System.FormatException"><i>value</i> is not in the correct format or the currency sign matches with multiple known currencies!</exception>
+            <exception cref="T:System.OverflowException"><i>value</i> represents a number less than <see cref="F:System.Decimal.MinValue"/> or greater than <see cref="F:System.Decimal.MaxValue"/>.</exception>
+        </member>
+        <member name="M:NodaMoney.Money.Parse(System.String,NodaMoney.Currency)">
+            <summary>Converts the string representation of a money value to its <see cref="T:NodaMoney.Money"/> equivalent.</summary>
+            <param name="value">The string representation of the number to convert.</param>
+            <param name="currency">The currency to use for parsing the string representation.</param>
+            <returns>The equivalent to the money amount contained in <i>value</i>.</returns>
+            <exception cref="T:System.ArgumentNullException"><i>value</i> is <b>null</b> or empty.</exception>
+            <exception cref="T:System.FormatException"><i>value</i> is not in the correct format or the currency sign matches with multiple known currencies!</exception>
+            <exception cref="T:System.OverflowException"><i>value</i> represents a number less than <see cref="F:System.Decimal.MinValue"/> or greater than <see cref="F:System.Decimal.MaxValue"/>.</exception>
+        </member>
+        <member name="M:NodaMoney.Money.Parse(System.String,System.Globalization.NumberStyles,System.IFormatProvider,NodaMoney.Currency)">
+            <summary>Converts the string representation of a money value to its <see cref="T:NodaMoney.Money"/> equivalent.</summary>
+            <param name="value">The string representation of the number to convert.</param>
+            <param name="style">A bitwise combination of enumeration values that indicates the permitted format of value. A typical value to specify is <see cref="F:System.Globalization.NumberStyles.Currency"/>.</param>
+            <param name="provider">An object that supplies culture-specific parsing information about <i>value</i>.</param>
+            <param name="currency">The currency to use for parsing the string representation.</param>
+            <returns>The equivalent to the money amount contained in <i>value</i>.</returns>
+            <exception cref="T:System.ArgumentNullException"><i>value</i> is <b>null</b> or empty.</exception>
+            <exception cref="T:System.FormatException"><i>value</i> is not in the correct format or the currency sign matches with multiple known currencies!</exception>
+            <exception cref="T:System.OverflowException"><i>value</i> represents a number less than <see cref="F:System.Decimal.MinValue"/> or greater than <see cref="F:System.Decimal.MaxValue"/>.</exception>
+        </member>
+        <member name="M:NodaMoney.Money.TryParse(System.String,NodaMoney.Money@)">
+            <summary>Converts the string representation of a money value to its <see cref="T:NodaMoney.Money"/> equivalent. A return value indicates whether the conversion succeeded or failed.</summary>
+            <param name="value">The string representation of the money to convert.</param>
+            <param name="result">When this method returns, contains the <see cref="T:NodaMoney.Money"/> value that is equivalent to the money
+            value contained in <i>value</i>, if the conversion succeeded, or is Money value of zero with no currency (XXX) if the
+            conversion failed. The conversion fails if the <i>value</i> parameter is <b>null</b> or <see cref="F:System.String.Empty"/>, is not a number
+            in a valid format, or represents a number less than <see cref="F:System.Decimal.MinValue"/> or greater than <see cref="F:System.Decimal.MaxValue"/>. This parameter is passed
+            uninitialized; any <i>value</i> originally supplied in result will be overwritten</param>
+            <returns><b>true</b> if <i>value</i> was converted successfully; otherwise, <b>false</b>.</returns>
+            <remarks>See <see cref="M:System.Decimal.TryParse(System.String,System.Decimal@)"/> for more info and remarks.</remarks>
+        </member>
+        <member name="M:NodaMoney.Money.TryParse(System.String,NodaMoney.Currency,NodaMoney.Money@)">
+            <summary>Converts the string representation of a money value to its <see cref="T:NodaMoney.Money"/> equivalent. A return value indicates whether the conversion succeeded or failed.</summary>
+            <param name="value">The string representation of the money to convert.</param>
+            <param name="currency">The currency to use for parsing the string representation.</param>
+            <param name="result">When this method returns, contains the <see cref="T:NodaMoney.Money"/> value that is equivalent to the money
+            value contained in <i>value</i>, if the conversion succeeded, or is Money value of zero with no currency (XXX) if the
+            conversion failed. The conversion fails if the <i>value</i> parameter is <b>null</b> or <see cref="F:System.String.Empty"/>, is not a number
+            in a valid format, or represents a number less than <see cref="F:System.Decimal.MinValue"/> or greater than <see cref="F:System.Decimal.MaxValue"/>. This parameter is passed
+            uninitialized; any <i>value</i> originally supplied in result will be overwritten</param>
+            <returns><b>true</b> if <i>value</i> was converted successfully; otherwise, <b>false</b>.</returns>
+            <remarks>See <see cref="M:System.Decimal.TryParse(System.String,System.Decimal@)"/> for more info and remarks.</remarks>
+        </member>
+        <member name="M:NodaMoney.Money.TryParse(System.String,System.Globalization.NumberStyles,System.IFormatProvider,NodaMoney.Currency,NodaMoney.Money@)">
+            <summary>Converts the string representation of a money value to its <see cref="T:NodaMoney.Money"/> equivalent. A return value indicates whether the conversion succeeded or failed.</summary>
+            <param name="value">The string representation of the money to convert.</param>
+            <param name="style">A bitwise combination of enumeration values that indicates the permitted format of value. A typical value to specify is <see cref="F:System.Globalization.NumberStyles.Currency"/>.</param>
+            <param name="provider">An object that supplies culture-specific parsing information about <i>value</i>.</param>
+            <param name="currency">The currency to use for parsing the string representation.</param>
+            <param name="result">When this method returns, contains the <see cref="T:NodaMoney.Money"/> value that is equivalent to the money
+            value contained in <i>value</i>, if the conversion succeeded, or is Money value of zero with no currency (XXX) if the
+            conversion failed. The conversion fails if the <i>value</i> parameter is <b>null</b> or <see cref="F:System.String.Empty"/>, is not a number
+            in a valid format, or represents a number less than <see cref="F:System.Decimal.MinValue"/> or greater than <see cref="F:System.Decimal.MaxValue"/>. This parameter is passed
+            uninitialized; any <i>value</i> originally supplied in result will be overwritten</param>
+            <returns><b>true</b> if <i>value</i> was converted successfully; otherwise, <b>false</b>.</returns>
+            <remarks>See <see cref="M:System.Decimal.TryParse(System.String,System.Globalization.NumberStyles,System.IFormatProvider,System.Decimal@)"/> for more info and remarks.</remarks>
+        </member>
+        <member name="M:NodaMoney.Money.GetSchema">
+            <summary>This method is reserved and should not be used. When implementing the IXmlSerializable interface, you should
+            return null (Nothing in Visual Basic) from this method, and instead, if specifying a custom schema is required, apply
+            the <see cref="T:System.Xml.Serialization.XmlSchemaProviderAttribute" /> to the class.</summary>
+            <returns>An <see cref="T:System.Xml.Schema.XmlSchema" /> that describes the XML representation of the object that is
+            produced by the <see cref="M:System.Xml.Serialization.IXmlSerializable.WriteXml(System.Xml.XmlWriter)" /> method
+            and consumed by the <see cref="M:System.Xml.Serialization.IXmlSerializable.ReadXml(System.Xml.XmlReader)" /> method.
+            </returns>
+        </member>
+        <member name="M:NodaMoney.Money.ReadXml(System.Xml.XmlReader)">
+            <summary>Generates an object from its XML representation.</summary>
+            <param name="reader">The <see cref="T:System.Xml.XmlReader" /> stream from which the object is deserialized.</param>
+            <exception cref="T:System.ArgumentNullException">The value of 'reader' cannot be null.</exception>
+            <exception cref="T:System.Runtime.Serialization.SerializationException">The xml should have a content element with name Money!</exception>
+        </member>
+        <member name="M:NodaMoney.Money.WriteXml(System.Xml.XmlWriter)">
+            <summary>Converts an object into its XML representation.</summary>
+            <param name="writer">The <see cref="T:System.Xml.XmlWriter" /> stream to which the object is serialized.</param>
+            <exception cref="T:System.ArgumentNullException">The value of 'writer' cannot be null.</exception>
+        </member>
+        <member name="M:NodaMoney.Money.op_UnaryPlus(NodaMoney.Money)">
+            <summary>Implements the operator +.</summary>
+            <param name="money">The money.</param>
+            <returns>The result of the operator.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.op_UnaryNegation(NodaMoney.Money)">
+            <summary>Implements the operator -.</summary>
+            <param name="money">The money.</param>
+            <returns>The result of the operator.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.op_Increment(NodaMoney.Money)">
+            <summary>Implements the operator ++.</summary>
+            <param name="money">The money.</param>
+            <returns>The result of the operator.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.op_Decrement(NodaMoney.Money)">
+            <summary>Implements the operator --.</summary>
+            <param name="money">The money.</param>
+            <returns>The result of the operator.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.Plus(NodaMoney.Money)">
+            <summary>Pluses the specified money.</summary>
+            <param name="money">The money.</param>
+            <returns>The result.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.Negate(NodaMoney.Money)">
+            <summary>Negates the specified money.</summary>
+            <param name="money">The money.</param>
+            <returns>The result.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.Increment(NodaMoney.Money)">
+            <summary>Increments the specified money.</summary>
+            <param name="money">The money.</param>
+            <returns>The result.</returns>
+        </member>
+        <member name="M:NodaMoney.Money.Decrement(NodaMoney.Money)">
+            <summary>Decrements the specified money.</summary>
+            <param name="money">The money.</param>
+            <returns>The result.</returns>
+        </member>
+        <member name="T:NodaMoney.Serialization.JsonNet.MoneyJsonConverter">
+            <summary>Converts a instance of Money to and from JSON.</summary>
+        </member>
+        <member name="P:NodaMoney.Serialization.JsonNet.MoneyJsonConverter.CanRead">
+            <summary>Gets a value indicating whether this <see cref="T:Newtonsoft.Json.JsonConverter" /> can read JSON.</summary>
+            <value><c>true</c> if this <see cref="T:Newtonsoft.Json.JsonConverter" /> can read JSON; otherwise, <c>false</c>. </value>
+        </member>
+        <member name="M:NodaMoney.Serialization.JsonNet.MoneyJsonConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <summary>Writes the JSON representation of the object.</summary>
+            <param name="writer">The <see cref="T:Newtonsoft.Json.JsonWriter"/> to write to.</param>
+            <param name="value">The value.</param>
+            <param name="serializer">The calling serializer.</param>
+            <exception cref="T:System.ArgumentNullException">The value of 'writer', 'value' and 'serializer' cannot be null.</exception>
+        </member>
+        <member name="M:NodaMoney.Serialization.JsonNet.MoneyJsonConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <summary>Reads the JSON representation of the object.</summary>
+            <param name="reader">The <see cref="T:Newtonsoft.Json.JsonReader"/> to read from.</param>
+            <param name="objectType">Type of the object.</param>
+            <param name="existingValue">The existing value of object being read.</param>
+            <param name="serializer">The calling serializer.</param>
+            <returns>The object value.</returns>
+            <exception cref="T:System.ArgumentNullException">The value of 'reader' cannot be null.</exception>
+        </member>
+        <member name="M:NodaMoney.Serialization.JsonNet.MoneyJsonConverter.CanConvert(System.Type)">
+            <summary>Determines whether this instance can convert the specified object type.</summary>
+            <param name="objectType">Type of the object.</param>
+            <returns><c>true</c> if this instance can convert the specified object type; otherwise,<c>false</c>.</returns>
+        </member>
+    </members>
+</doc>
